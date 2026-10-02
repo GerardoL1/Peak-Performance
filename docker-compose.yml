@@ -1,0 +1,49 @@
+# One-command demo: MySQL + API + web.   cp .env.example .env  (fill it in), then
+#   docker compose up --build        ->  http://localhost:8080
+# Loads the schema, sample data and demo activity on the first start, and creates
+# the demo logins (manager@demo.test, frontdesk@demo.test, trainer@demo.test,
+# therapist@demo.test) with DEMO_PASSWORD. For local development, not production.
+
+services:
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?set it in .env}
+      DB_PASSWORD: ${DB_PASSWORD:?set it in .env} # for 05-app-user.sh
+    volumes:
+      - db-data:/var/lib/mysql
+      # Run in name order on first start only (empty volume).
+      - ./server/sql/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      - ./server/sql/002_auth_and_scheduling.sql:/docker-entrypoint-initdb.d/02-auth.sql:ro
+      - ./server/sql/seed.sql:/docker-entrypoint-initdb.d/03-seed.sql:ro
+      - ./server/sql/seed-demo-activity.sql:/docker-entrypoint-initdb.d/04-demo.sql:ro
+      - ./docker/05-app-user.sh:/docker-entrypoint-initdb.d/05-app-user.sh:ro
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', '127.0.0.1', '-p${MYSQL_ROOT_PASSWORD}']
+      interval: 5s
+      retries: 30
+
+  api:
+    build: { context: ., dockerfile: server/Dockerfile }
+    depends_on:
+      db: { condition: service_healthy }
+    environment:
+      NODE_ENV: development # local demo over plain http; also allows the demo logins
+      DB_HOST: db
+      DB_USER: peak_app
+      DB_PASSWORD: ${DB_PASSWORD:?set it in .env}
+      DB_NAME: peakperformance
+      SERVER_HOST: 0.0.0.0
+      JWT_SECRET: ${JWT_SECRET:?set it in .env}
+      DEMO_PASSWORD: ${DEMO_PASSWORD:?set it in .env}
+      CORS_ORIGIN: http://localhost:8080
+      TRUST_PROXY: 1
+    command: sh -c "node scripts/seed-demo-users.js && node src/index.js"
+
+  web:
+    build: { context: ., dockerfile: client/Dockerfile }
+    depends_on: [api]
+    ports: ['8080:80']
+
+volumes:
+  db-data:

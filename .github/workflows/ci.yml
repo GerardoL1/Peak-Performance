@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+        ports: ['3306:3306']
+        options: >-
+          --health-cmd="mysqladmin ping -proot"
+          --health-interval=5s --health-timeout=5s --health-retries=20
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run format:check
+      - run: npm run typecheck
+      - run: npm run build
+
+      - name: Load schema and seed data
+        run: |
+          for f in schema.sql 002_auth_and_scheduling.sql seed.sql; do
+            mysql -h127.0.0.1 -uroot -proot < server/sql/$f
+          done
+          # Tests run as the same least-privilege user the app uses in real life.
+          mysql -h127.0.0.1 -uroot -proot -e "
+            CREATE USER 'peak_app'@'%' IDENTIFIED BY 'ci-only-password';
+            GRANT SELECT, INSERT, UPDATE, DELETE ON peakperformance.* TO 'peak_app'@'%';"
+
+      - name: Tests (unit + integration)
+        run: npm test
+        env:
+          TEST_DB_HOST: 127.0.0.1
+          TEST_DB_PORT: 3306
+          TEST_DB_USER: peak_app
+          TEST_DB_PASSWORD: ci-only-password
