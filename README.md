@@ -41,7 +41,7 @@ with the `DEMO_PASSWORD` you chose. The database starts with sample data and a m
 ### 1. Get the code
 
 ```bash
-git clone https://github.com/<your-username>/peak-performance.git
+git clone https://github.com/GerardoL1/peak-performance.git
 cd peak-performance
 npm install
 ```
