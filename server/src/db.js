@@ -16,7 +16,7 @@ function createPool(dbConfig, overrides = {}) {
   });
 }
 
-/** Runs fn(conn) inside a transaction; commits on success, rolls back on any error. */
+/** Runs fn(conn) in a transaction. Commits if it works, rolls back if anything throws. */
 async function withTransaction(db, fn) {
   const conn = await db.getConnection();
   try {

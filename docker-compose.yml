@@ -1,8 +1,6 @@
-# One-command demo: MySQL + API + web.   cp .env.example .env  (fill it in), then
-#   docker compose up --build        ->  http://localhost:8080
-# Loads the schema, sample data and demo activity on the first start, and creates
-# the demo logins (manager@demo.test, frontdesk@demo.test, trainer@demo.test,
-# therapist@demo.test) with DEMO_PASSWORD. For local development, not production.
+# One-command local demo. Copy .env.example to .env, fill it in, then run
+#   docker compose up --build   and open http://localhost:8080
+# Demo logins (manager@demo.test and friends) use DEMO_PASSWORD.
 
 services:
   db:
@@ -28,7 +26,7 @@ services:
     depends_on:
       db: { condition: service_healthy }
     environment:
-      NODE_ENV: development # local demo over plain http; also allows the demo logins
+      NODE_ENV: development # plain http demo, and it lets the demo logins be created
       DB_HOST: db
       DB_USER: peak_app
       DB_PASSWORD: ${DB_PASSWORD:?set it in .env}

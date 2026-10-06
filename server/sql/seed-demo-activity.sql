@@ -1,4 +1,4 @@
--- seed-demo-activity.sql — OPTIONAL mock data so the app looks lived-in.
+-- Optional mock data so the app looks lived-in.
 -- Every person here is fictional (emails end in @mockmail.test, phones are 555 numbers).
 -- Dates are relative to the day you run it: the past 30–60 days plus the next 14.
 --
@@ -54,7 +54,7 @@ SELECT c.cap, c.day, c.start_time, c.day, ADDTIME(c.start_time, SEC_TO_TIME(g.Du
                     WHERE x.StartDate = c.day AND x.StartTime = c.start_time AND x.RoomID = c.room);
 
 -- ── Reservations: fill each of those classes 40–100% (fewer bookings further out).
---    Past classes are Attended (about 1 in 9 Cancelled); upcoming ones are Booked.
+--    Past classes are Attended (about 1 in 9 Cancelled). Upcoming ones are Booked.
 INSERT INTO reservation (ReservationDate, ReservationStatus, ScheduleID, MemberID)
 SELECT LEAST(CURDATE(), r.StartDate - INTERVAL (1 + r.h % 6) DAY),
        CASE WHEN r.StartDate >= CURDATE() THEN 'Booked'

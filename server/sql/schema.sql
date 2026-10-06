@@ -1,4 +1,4 @@
--- schema.sql — builds the Peak Performance database from scratch.
+-- Builds the Peak Performance database from scratch.
 -- Works on MySQL 8.0.16+ (CHECK constraints are enforced from that version).
 --
 -- Table and database names are all lowercase on purpose: MySQL treats them as
@@ -81,8 +81,8 @@ CREATE TABLE staff (
     ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
--- Business rule: name, phone, address and email are required;
--- emergency contact, birthday and start date are optional.
+-- Name, phone, address and email are required.
+-- Emergency contact, birthday and start date are optional.
 CREATE TABLE member (
   MemberID            INT          NOT NULL AUTO_INCREMENT,
   FirstName           VARCHAR(50)  NOT NULL,
@@ -140,8 +140,8 @@ CREATE TABLE reservation (
 
 -- ── Sessions and visits ─────────────────────────────────────────────────────
 
--- NOTE: ReservationID links a personal-training session to a *class* reservation,
--- which is unusual; the API keeps it read-only.
+-- ReservationID links a training session to a class reservation, which is unusual.
+-- The API keeps it read-only.
 CREATE TABLE personaltrainingsession (
   TrainingID    INT  NOT NULL AUTO_INCREMENT,
   StartDate     DATE NOT NULL,

@@ -3,11 +3,8 @@
 //
 //   DEMO_PASSWORD='something-long' npm run seed:demo-users
 //
-// Accounts (all share DEMO_PASSWORD):
-//   manager@demo.test     manager
-//   frontdesk@demo.test   front_desk
-//   trainer@demo.test     trainer   (staff 5, James Wilson)
-//   therapist@demo.test   therapist (staff 16, Nicole Walker)
+// Makes manager@, frontdesk@, trainer@ (staff 5) and therapist@ (staff 16) at demo.test,
+// all sharing DEMO_PASSWORD.
 
 require('dotenv').config();
 const bcrypt = require('bcryptjs');

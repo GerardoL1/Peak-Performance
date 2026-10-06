@@ -1,6 +1,6 @@
-// End-to-end API tests against a real MySQL database that has schema.sql,
-// 002_auth_and_scheduling.sql and seed.sql loaded (CI does this; see
-// .github/workflows/ci.yml). Skipped when TEST_DB_HOST is not set.
+// End-to-end API tests against a real MySQL database with schema.sql,
+// 002_auth_and_scheduling.sql and seed.sql loaded. CI sets this up.
+// Skipped when TEST_DB_HOST isn't set.
 //
 // Test logins are created here and removed afterwards. Rows the tests create
 // use dates far in the future so they never collide with seed or demo data.

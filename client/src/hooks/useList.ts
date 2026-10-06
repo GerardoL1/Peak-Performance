@@ -7,7 +7,7 @@ interface Listable<T> {
   list: (params?: Params) => Promise<Paginated<T>>;
 }
 
-/** Fetches one page of a list; keeps the previous page on screen while the next loads. */
+/** Fetches one page of a list. Keeps the old page visible while the next one loads. */
 export function useList<T>(resource: Listable<T>, params: Params) {
   const query = useQuery({
     queryKey: [resource.path, params],

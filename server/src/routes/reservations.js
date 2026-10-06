@@ -119,8 +119,8 @@ module.exports = function reservationRoutes({ db }) {
     })
   );
 
-  // Only Booked reservations can move to Cancelled or Attended. A cancelled reservation
-  // can't be revived (it would silently take a seat back); book again instead.
+  // Only Booked reservations can change. Reviving a cancelled one would quietly
+  // take a seat back, so the member has to book again instead.
   router.patch(
     '/:id',
     requirePermission('reservations:update'),

@@ -34,6 +34,6 @@ export default tseslint.config(
     },
   },
 
-  // Formatting is Prettier's job; turn off rules that would fight it.
+  // Prettier handles formatting, so turn off any rules that would fight it.
   prettier
 );

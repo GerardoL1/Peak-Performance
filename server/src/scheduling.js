@@ -19,11 +19,9 @@ const THERAPY_END = 'pt.AppointmentDate + INTERVAL pt.DurationMinutes MINUTE';
 const fmt = (date, time) => `${date} ${String(time).slice(0, 5)}`;
 
 /**
- * Locks the staff/room/member rows involved (SELECT ... FOR UPDATE) so two
- * concurrent requests for the same person or room are serialized: the second
- * waits, then sees the first one's booking in its overlap check. Locks are always
- * taken in the same order (staff, room, member) to avoid deadlocks.
- * Must be called inside a transaction.
+ * Locks the staff, room and member rows (SELECT ... FOR UPDATE) so two bookings
+ * for the same slot can't both get through. Locks go in a fixed order to avoid
+ * deadlocks. Call it inside a transaction.
  */
 async function lockParticipants(conn, { staffId, roomId, memberId }) {
   const lock = async (sql, id, message) => {

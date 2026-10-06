@@ -4,7 +4,7 @@ import type { Paginated } from './types';
 
 export const http = axios.create({ baseURL: '/api', withCredentials: true });
 
-// Any 401 outside the auth endpoints means the session ended; AuthProvider listens.
+// A 401 outside the auth endpoints means the session ended. AuthProvider listens for this.
 http.interceptors.response.use(undefined, (error) => {
   if (axios.isAxiosError(error) && error.response?.status === 401 && !error.config?.url?.startsWith('/auth/')) {
     window.dispatchEvent(new Event('auth:expired'));

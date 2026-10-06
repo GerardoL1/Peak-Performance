@@ -1,4 +1,4 @@
--- seed.sql — sample data for development/demo only (fictional people).
+-- Sample data for development and demos (all people are fictional).
 -- Run AFTER schema.sql, on an empty database.
 
 USE peakperformance;

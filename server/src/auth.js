@@ -70,8 +70,8 @@ function createAuth({ db, config }) {
     res.clearCookie(COOKIE_NAME, rest);
   }
 
-  /** Requires a valid session; sets req.user. The user is re-read on every request so
-   *  deactivation, role changes and password resets take effect immediately. */
+  /** Requires a valid session and sets req.user. The user is re-read every time
+   *  so deactivation, role changes and password resets apply right away. */
   const authenticate = wrap(async (req, res, next) => {
     const token = req.cookies?.[COOKIE_NAME];
     if (!token) throw new HttpError(401, 'Please sign in');

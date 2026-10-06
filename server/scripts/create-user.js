@@ -17,9 +17,8 @@ const { createPool } = require('../src/db');
 const { validate, userCreateSchema } = require('../src/validation');
 
 /**
- * Asks the questions one after another on a single readline interface, echoing
- * "*" instead of the typed characters. (Opening a second interface after closing
- * the first is unreliable on Windows terminals.)
+ * Asks each question on one readline interface and shows * instead of the typed text.
+ * A second interface is flaky on Windows terminals, so we reuse this one.
  */
 async function promptHidden(questions) {
   const rl = readline.createInterface({ input: process.stdin, output: process.stdout, terminal: true });

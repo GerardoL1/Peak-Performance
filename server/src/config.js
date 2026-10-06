@@ -55,7 +55,7 @@ function loadConfig(env = process.env) {
       jwtSecret: env.JWT_SECRET,
       sessionHours: int(env, 'SESSION_HOURS', 10, { min: 1, max: 24 * 7 }),
       bcryptRounds: int(env, 'BCRYPT_ROUNDS', 12, { min: 4, max: 15 }),
-      // Secure cookies are only sent over HTTPS; default on in production.
+      // Secure cookies only work over HTTPS, so this is on by default in production.
       cookieSecure: bool(env, 'COOKIE_SECURE', production),
     },
   };

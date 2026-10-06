@@ -12,7 +12,7 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 30_000,
-      // Don't retry 4xx responses (bad input, no permission); do retry network blips once.
+      // Retry network blips once, but not 4xx errors like bad input or no permission.
       retry: (count, error) => count < 1 && !(axios.isAxiosError(error) && (error.response?.status ?? 500) < 500),
     },
   },

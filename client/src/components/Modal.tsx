@@ -8,10 +8,8 @@ interface Props {
 }
 
 /**
- * Built on the native <dialog> element opened with showModal(), which gives us the
- * accessibility behaviour for free: focus moves into the dialog and is trapped there,
- * the page behind is inert, Escape closes it, and focus returns to the button that
- * opened it. Render it conditionally: {open && <Modal .../>}.
+ * Uses the native <dialog> so focus trapping, Escape and focus return come for free.
+ * Render it conditionally, like {open && <Modal .../>}.
  */
 export function Modal({ title, onClose, children, footer }: Props) {
   const ref = useRef<HTMLDialogElement>(null);
@@ -24,7 +22,7 @@ export function Modal({ title, onClose, children, footer }: Props) {
   }, []);
 
   return (
-    // Backdrop click is a mouse shortcut; keyboard users close with Escape (onCancel) or the Close button.
+    // Clicking the backdrop is just a mouse shortcut. Keyboard users have Escape and the Close button.
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions
     <dialog
       ref={ref}

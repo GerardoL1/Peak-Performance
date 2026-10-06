@@ -137,7 +137,7 @@ module.exports = function therapyRoutes({ db }) {
         assertMayWriteNotes(req.user, existing[0].StaffID, d.TreatmentNotes);
         await assertSlotFree(conn, slotOf(d, id));
 
-        // Users who can't see the notes can still reschedule; the notes are left untouched.
+        // People who can't see the notes can still reschedule. The notes stay as they were.
         const cols = canSeeNotes(req.user, existing[0].StaffID) ? [...COLUMNS, 'TreatmentNotes'] : COLUMNS;
         await conn.query(
           `UPDATE physicaltherapysession SET ${cols.map((c) => `${c} = ?`).join(', ')} WHERE TherapyID = ?`,

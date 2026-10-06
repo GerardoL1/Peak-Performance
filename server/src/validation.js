@@ -180,8 +180,8 @@ const checkInSchema = z.object({ MemberID: posInt });
 // ── Auth / users ─────────────────────────────────────────────────────────────
 
 const ROLES = ['manager', 'front_desk', 'trainer', 'therapist'];
-// bcrypt only uses the first 72 bytes of a password; reject longer ones rather
-// than silently ignoring the tail.
+// bcrypt only reads the first 72 bytes of a password, so reject longer ones
+// instead of silently ignoring the rest.
 const password = z
   .string(typeError('Must be text'))
   .min(12, 'Use at least 12 characters')

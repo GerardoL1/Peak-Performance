@@ -1,6 +1,5 @@
--- 002_auth_and_scheduling.sql — adds login accounts and what the scheduling
--- conflict checks need. Run it ONCE, as root/admin in Workbench (it needs
--- CREATE/ALTER, which the peak_app user deliberately does not have):
+-- Adds login accounts and what the double-booking checks need.
+-- Run it once as root in Workbench, since peak_app can't create or alter tables.
 --
 --   brand-new database:  schema.sql  -> 002_auth_and_scheduling.sql -> seed.sql
 --
@@ -10,10 +9,8 @@
 USE peakperformance;
 
 -- ── Login accounts ──────────────────────────────────────────────────────────
--- Separate from `staff` on purpose: not every staff member needs a login, and
--- credentials should never be returned by the staff endpoints.
--- Trainers and therapists must be linked to their staff row, because that link
--- is how the API decides which sessions (and therapy notes) they can touch.
+-- Kept apart from staff so credentials never leak through the staff endpoints.
+-- Trainers and therapists link to their staff row, which decides what they can edit.
 CREATE TABLE users (
   UserID       INT          NOT NULL AUTO_INCREMENT,
   Email        VARCHAR(100) NOT NULL,
@@ -21,8 +18,8 @@ CREATE TABLE users (
   Role         ENUM('manager','front_desk','trainer','therapist') NOT NULL,
   StaffID      INT          NULL,
   IsActive     TINYINT(1)   NOT NULL DEFAULT 1,
-  -- Bumped on password reset, role change or deactivation; tokens carrying an
-  -- older version are rejected, so those changes take effect immediately.
+  -- Goes up on a password reset, role change or deactivation.
+  -- Older sessions stop working right away.
   TokenVersion INT          NOT NULL DEFAULT 0,
   CreatedAt    DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
   LastLoginAt  DATETIME     NULL,
